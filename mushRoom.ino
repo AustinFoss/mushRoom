@@ -36,10 +36,10 @@ EthernetUDP Udp;
 void setup() {
 
   // Serial Setup
-  Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
+  // Serial.begin(9600);
+  // while (!Serial) {
+  //   ; // wait for serial port to connect. Needed for native USB port only
+  // }
 
   pinMode(relay1, INPUT_PULLUP); // first enable pull up, to stop relay chatter during bootup
   pinMode(relay1, OUTPUT); // then set pin to output
@@ -54,13 +54,13 @@ void setup() {
   Ethernet.init(10);
   Ethernet.begin(mac);
 
-  Serial.println("Initialize Ethernet with DHCP:");
+  // Serial.println("Initialize Ethernet with DHCP:");
   if (Ethernet.begin(mac) == 0) {
-    Serial.println("Failed to configure Ethernet using DHCP");
+    // Serial.println("Failed to configure Ethernet using DHCP");
     if (Ethernet.hardwareStatus() == EthernetNoHardware) {
-      Serial.println("Ethernet shield was not found.  Sorry, can't run without hardware. :(");
+      // Serial.println("Ethernet shield was not found.  Sorry, can't run without hardware. :(");
     } else if (Ethernet.linkStatus() == LinkOFF) {
-      Serial.println("Ethernet cable is not connected.");
+      // Serial.println("Ethernet cable is not connected.");
     }
     // no point in carrying on, so do nothing forevermore:
     while (true) {
@@ -68,8 +68,8 @@ void setup() {
     }
   }
   // print your local IP address:
-  Serial.print("My IP address: ");
-  Serial.println(Ethernet.localIP());
+  // Serial.print("My IP address: ");
+  // Serial.println(Ethernet.localIP());
 
   // start UDP
   Udp.begin(localPort);
@@ -125,36 +125,34 @@ void loop() {
   int packetSize = Udp.parsePacket();
   if (packetSize) {
     if (Udp.remoteIP() == listeningFor) {
-        Serial.println();
-        Serial.print("Received packet of size: ");
-        Serial.print(packetSize);
-        Serial.println();
-        Serial.print("From: ");
+        // Serial.println();
+        // Serial.print("Received packet of size: ");
+        // Serial.print(packetSize);
+        // Serial.println();
+        // Serial.print("From: ");
         IPAddress remote = Udp.remoteIP();
-        for (int i=0; i < 4; i++) {
-          Serial.print(remote[i], DEC);
-          if (i < 3) {
-            Serial.print(".");
-          }
-        }
-        Serial.print(", port: ");
-        Serial.print(Udp.remotePort());
+        // for (int i=0; i < 4; i++) {
+        //   Serial.print(remote[i], DEC);
+        //   if (i < 3) {
+        //     Serial.print(".");
+        //   }
+        // }
+        // Serial.print(", port: ");
+        // Serial.print(Udp.remotePort());
 
         // read the packet into packetBufffer
         Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-        Serial.println();
-        Serial.print("Contents: ");
-        Serial.print(packetBuffer);
+        // Serial.println();
+        // Serial.print("Contents: ");
+        // Serial.print(packetBuffer);
 
-//        byte humd = sht20.readHumidity();                  // Read Humidity
-//        byte temp = sht20.readTemperature();               // Read Temperature
 
-        Serial.println();
-        Serial.println("Temperature: ");
-        Serial.print(temp);
-        Serial.println();
-        Serial.println("Humidity: ");
-        Serial.print(humd);
+        // Serial.println();
+        // Serial.println("Temperature: ");
+        // Serial.print(temp);
+        // Serial.println();
+        // Serial.println("Humidity: ");
+        // Serial.print(humd);
         byte replyBuffer[] = {roomID, envProfile, temp, humd, co2, isRelay1, isRelay2, isRelay3, isRelay4};
 
         // send a reply to the IP address and port that sent us the packet we received
@@ -164,14 +162,14 @@ void loop() {
           Udp.write(replyBuffer[i]);
         };
         Udp.endPacket();
-        Serial.println();
-        Serial.println("Data Sent");
-        Serial.println();
+        // Serial.println();
+        // Serial.println("Data Sent");
+        // Serial.println();
       }
-    else {
-      Serial.print("Received Packet From Unknown Source ");
-      Serial.print(Udp.remoteIP());
-      }
+    // else {
+    //   Serial.print("Received Packet From Unknown Source ");
+    //   Serial.print(Udp.remoteIP());
+    //   }
     }
   delay(10);
 }
